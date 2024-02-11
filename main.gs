@@ -282,3 +282,28 @@ function newObjectsFrom2DArray(arr) {
     Object.fromEntries(record.map((value, i) => [headers[i], value]))
   );
 }
+
+function onOpen(e) {
+  const ui = SpreadsheetApp.getUi();
+  ui.createMenu("クラスルーム一括処理")
+    .addItem("クラスを一覧表示", "listCourses")
+    .addSubMenu(
+      ui
+        .createMenu("クラスを一括作成")
+        .addItem("実行", "createCourses")
+        .addItem("シート初期化", "resetCourseCreationSheet")
+    )
+    .addSubMenu(
+      ui
+        .createMenu("クラスに一括招待")
+        .addItem("実行", "createInvitations")
+        .addItem("シート初期化", "resetInvitationSheet")
+    )
+    .addSubMenu(
+      ui
+        .createMenu("クラスを一括削除")
+        .addItem("一括アーカイブ", "archiveCourses")
+        .addItem("一括削除", "removeCourses")
+    )
+    .addToUi();
+}
