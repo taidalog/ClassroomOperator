@@ -1,0 +1,14 @@
+{
+    "timeZone": "Asia/Tokyo",
+    "dependencies": {
+      "enabledAdvancedServices": [
+        {
+          "userSymbol": "Classroom",
+          "version": "v1",
+          "serviceId": "classroom"
+        }
+      ]
+    },
+    "exceptionLogging": "STACKDRIVER",
+    "runtimeVersion": "V8"
+  }
