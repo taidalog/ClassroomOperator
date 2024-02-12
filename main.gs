@@ -1,3 +1,5 @@
+// https://github.com/taidalog/ClassroomOperator
+
 const helpURL =
   "https://github.com/taidalog/ClassroomOperator/blob/v2.0.0/README.ja.md";
 
