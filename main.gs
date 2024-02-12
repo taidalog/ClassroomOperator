@@ -244,6 +244,16 @@ function invokeArchiveOrRemovecourses(action) {
   // 2次元配列をオブジェクトの配列に変換する。
   const requests = newObjectsFrom2DArray(values);
 
+  if (requests.filter((x) => x.target === true).length === 0) {
+    Browser.msgBox(
+      "[" +
+        listSheetInfo.name +
+        "] シートで、削除またはアーカイブするクラスにチェックを入れてから再度実行してください。",
+      Browser.Buttons.OK
+    );
+    return false;
+  }
+
   // チェックボックスにチェックが入ったものを抽出し、
   // その内容を関数で確認する。
   // 確認している内容については validateRequest 関数を参照のこと。
