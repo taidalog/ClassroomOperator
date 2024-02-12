@@ -72,12 +72,26 @@ function createCourses() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sh = ss.getSheetByName(creationSheetInfo.name);
 
+  if (null == sh) {
+    newCourseCreationSheet();
+    Browser.msgBox(
+      "[" +
+        creationSheetInfo.name +
+        "] シートが存在しなかったので作成しました。\\n新しく作成するクラスの情報を入力してから再度実行してください。\\nA列の name のみ必須です。",
+      Browser.Buttons.OK
+    );
+    return false;
+  }
+
   // スプレッドシートの内容を2次元配列に格納する。
   const firstCell = sh.getRange(1, 1);
   const values = firstCell.getDataRegion().getValues();
+
   if (firstCell.getValue() === "" || values.length === 1) {
     Browser.msgBox(
-      "新しく作成するクラスの情報を入力してから実行してください。\\nA列の name のみ必須です。",
+      "[" +
+        creationSheetInfo.name +
+        "] シートに、新しく作成するクラスの情報を入力してから再度実行してください。\\nA列の name のみ必須です。",
       Browser.Buttons.OK
     );
     return false;
@@ -101,6 +115,20 @@ function createCourses() {
 function resetCourseCreationSheet() {
   // 選択中のシートの内容を消去し、クラス一括作成用の見出しを作成する。
 
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sh = ss.getSheetByName(creationSheetInfo.name);
+
+  if (null == sh) {
+    newCourseCreationSheet();
+    Browser.msgBox(
+      "[" +
+        creationSheetInfo.name +
+        "] シートが存在しなかったので作成しました。",
+      Browser.Buttons.OK
+    );
+    return false;
+  }
+
   const res = Browser.msgBox(
     "[" +
       creationSheetInfo.name +
@@ -111,8 +139,6 @@ function resetCourseCreationSheet() {
     return false;
   }
 
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sh = ss.getSheetByName(creationSheetInfo.name);
   sh.clearContents();
   sh.getRange(1, 1, 1, creationSheetInfo.headers.length).setValues([
     creationSheetInfo.headers,
@@ -131,8 +157,18 @@ function listCourses() {
     listSheetInfo.headers.map((x) => course[x])
   );
 
+  const getSheet = () => {
+    const temp = ss.getSheetByName(listSheetInfo.name);
+    if (null !== temp) {
+      return temp;
+    } else {
+      newCourseListSheet();
+      return ss.getSheetByName(listSheetInfo.name);
+    }
+  };
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sh = ss.getSheetByName(listSheetInfo.name);
+  const sh = getSheet();
+
   const currentDataRegion = sh.getRange(1, 1).getDataRegion();
   currentDataRegion.clear();
   sh.getRange(2, 1, sh.getLastRow()).removeCheckboxes();
@@ -183,13 +219,23 @@ function invokeArchiveOrRemovecourses(action) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sh = ss.getSheetByName(listSheetInfo.name);
 
+  if (null == sh) {
+    Browser.msgBox(
+      "[" +
+        listSheetInfo.name +
+        "] シートが存在しなかったので、処理を中断しました。\\nメニューから [クラスを一覧表示] を実行して、削除またはアーカイブするクラスにチェックを入れてから再度実行してください。",
+      Browser.Buttons.OK
+    );
+    return false;
+  }
+
   // セルの内容を2次元配列に格納する。
   // 2次元配列の1次元目の要素数が 1、つまり見出し行しかなかった場合、実行をキャンセルする。
   const firstCell = sh.getRange(1, 1);
   const values = firstCell.getDataRegion().getValues();
   if (firstCell.getValue() === "" || values.length === 1) {
     Browser.msgBox(
-      "まず初めにクラスの一覧を作成し、それから実行してください。",
+      "メニューから [クラスを一覧表示] を実行して、削除またはアーカイブするクラスにチェックを入れてから再度実行してください。",
       Browser.Buttons.OK
     );
     return false;
@@ -238,7 +284,7 @@ function invokeArchiveOrRemovecourses(action) {
     Browser.msgBox(
       "以下のクラスを" +
         actionName +
-        "できませんでした。\\nスプレッドシート上のクラス名や ID が実際のものと一致しませんでした。\\nセルの内容が書き換わっている可能性があります。\\nクラスリストを再度作成してから実行してください。" +
+        "できませんでした。\\nスプレッドシート上のクラス名や ID が実際のものと一致しませんでした。\\nセルの内容が書き換わっている可能性があります。\\nクラスリストを作成しなおしてから再度実行してください。" +
         "\\n\\n" +
         unmatchedCourseNames
     );
@@ -268,13 +314,26 @@ function createInvitations() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sh = ss.getSheetByName(invitationSheetInfo.name);
 
+  if (null == sh) {
+    newInvitationSheet();
+    Browser.msgBox(
+      "[" +
+        invitationSheetInfo.name +
+        "] シートが存在しなかったので作成しました。\\n以下の通りに情報を入力してから再度実行してください。A列以外は全て必須です。\\nA列: クラス名\\nB列: クラス ID\\nC列: ユーザー ID\\nD列: 役割 (STUDENT/TEACHER)",
+      Browser.Buttons.OK
+    );
+    return false;
+  }
+
   // セルの内容を2次元配列に格納する。
   // 2次元配列の1次元目の要素数が 1、つまり見出し行しかなかった場合、実行をキャンセルする。
   const firstCell = sh.getRange(1, 1);
   const values = firstCell.getDataRegion().getValues();
   if (firstCell.getValue() === "" || values.length === 1) {
     Browser.msgBox(
-      "以下の通りに情報を入力してから実行してください。A列以外は全て必須です。\\nA列: クラス名\\nB列: クラス ID\\nC列: ユーザー ID\\nD列: 役割 (STUDENT/TEACHER)",
+      "[" +
+        invitationSheetInfo.name +
+        "] シートに、以下の通りに情報を入力してから再度実行してください。A列以外は全て必須です。\\nA列: クラス名\\nB列: クラス ID\\nC列: ユーザー ID\\nD列: 役割 (STUDENT/TEACHER)",
       Browser.Buttons.OK
     );
     return false;
@@ -297,6 +356,20 @@ function createInvitations() {
 function resetInvitationSheet() {
   // 選択中のシートの内容を消去し、一括招待用の見出しを作成する。
 
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sh = ss.getSheetByName(invitationSheetInfo.name);
+
+  if (null == sh) {
+    newInvitationSheet();
+    Browser.msgBox(
+      "[" +
+        invitationSheetInfo.name +
+        "] シートが存在しなかったので作成しました。",
+      Browser.Buttons.OK
+    );
+    return false;
+  }
+
   const res = Browser.msgBox(
     "[" +
       invitationSheetInfo.name +
@@ -307,8 +380,6 @@ function resetInvitationSheet() {
     return false;
   }
 
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sh = ss.getSheetByName(invitationSheetInfo.name);
   sh.getRange(1, 1).getDataRegion().clearContent();
   sh.getRange(1, 1, 1, invitationSheetInfo.headers.length).setValues([
     invitationSheetInfo.headers,
