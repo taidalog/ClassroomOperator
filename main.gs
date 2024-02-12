@@ -28,6 +28,12 @@ const listSheetInfo = {
     "https://developers.google.com/classroom/reference/rest/v1/courses#Course.FIELDS-table",
 };
 
+const listSheetInfoForNew = {
+  name: listSheetInfo.name,
+  headers: ["target"].concat(listSheetInfo.headers),
+  referenceUrl: listSheetInfo.referenceUrl,
+};
+
 const invitationSheetInfo = {
   name: "招待",
   headers: ["courseName", "courseId", "userId", "role"],
@@ -35,9 +41,9 @@ const invitationSheetInfo = {
     "https://developers.google.com/classroom/reference/rest/v1/invitations#Invitation.FIELDS-table",
 };
 
-function newCourseCreationSheet() {
+function newSheet(sheetInfo) {
   const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(
-    creationSheetInfo.name
+    sheetInfo.name
   );
 
   if (null !== sh) {
@@ -46,15 +52,19 @@ function newCourseCreationSheet() {
 
   const newsh = SpreadsheetApp.getActiveSpreadsheet()
     .insertSheet()
-    .setName(creationSheetInfo.name);
+    .setName(sheetInfo.name);
   newsh
-    .getRange(1, 1, 1, creationSheetInfo.headers.length)
-    .setValues([creationSheetInfo.headers]);
+    .getRange(1, 1, 1, sheetInfo.headers.length)
+    .setValues([sheetInfo.headers]);
   newsh
-    .getRange(1, creationSheetInfo.headers.length + 2)
-    .setValue(creationSheetInfo.referenceUrl);
+    .getRange(1, sheetInfo.headers.length + 2)
+    .setValue(sheetInfo.referenceUrl);
   newsh.setFrozenRows(1);
 }
+
+const newCourseCreationSheet = () => newSheet(creationSheetInfo);
+const newCourseListSheet = () => newSheet(listSheetInfoForNew);
+const newInvitationSheet = () => newSheet(invitationSheetInfo);
 
 function createCourses() {
   // スプレッドシート上で指定したクラス名を用いてクラスを一括作成する。
@@ -104,27 +114,6 @@ function resetCourseCreationSheet() {
   sh.getRange(1, creationSheetInfo.headers.length + 2).setValue(
     creationSheetInfo.referenceUrl
   );
-}
-
-function newCourseListSheet() {
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(
-    listSheetInfo.name
-  );
-
-  if (null !== sh) {
-    return false;
-  }
-
-  const newsh = SpreadsheetApp.getActiveSpreadsheet()
-    .insertSheet()
-    .setName(listSheetInfo.name);
-  newsh
-    .getRange(1, 1, 1, listSheetInfo.headers.length)
-    .setValues([listSheetInfo.headers]);
-  newsh
-    .getRange(1, listSheetInfo.headers.length + 2)
-    .setValue(listSheetInfo.referenceUrl);
-  newsh.setFrozenRows(1);
 }
 
 function listCourses() {
@@ -263,27 +252,6 @@ function invokeArchiveOrRemovecourses(action) {
         provisionCourseNames
     );
   }
-}
-
-function newInvitationSheet() {
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(
-    invitationSheetInfo.name
-  );
-
-  if (null !== sh) {
-    return false;
-  }
-
-  const newsh = SpreadsheetApp.getActiveSpreadsheet()
-    .insertSheet()
-    .setName(invitationSheetInfo.name);
-  newsh
-    .getRange(1, 1, 1, invitationSheetInfo.headers.length)
-    .setValues([invitationSheetInfo.headers]);
-  newsh
-    .getRange(1, invitationSheetInfo.headers.length + 2)
-    .setValue(invitationSheetInfo.referenceUrl);
-  newsh.setFrozenRows(1);
 }
 
 function createInvitations() {
