@@ -1,3 +1,29 @@
+function newCourseCreationSheet() {
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("作成");
+
+  if (null !== sh) {
+    return false;
+  }
+
+  const headers = [
+    "name",
+    "section",
+    "descriptionHeading",
+    "description",
+    "room",
+    "ownerId",
+    "courseState",
+  ];
+  const referenceUrl =
+    "https://developers.google.com/classroom/reference/rest/v1/courses#Course.FIELDS-table";
+  const newsh = SpreadsheetApp.getActiveSpreadsheet()
+    .insertSheet()
+    .setName("作成");
+  newsh.getRange(1, 1, 1, headers.length).setValues([headers]);
+  newsh.getRange(1, headers.length + 2).setValue(referenceUrl);
+  newsh.setFrozenRows(1);
+}
+
 function createCourses() {
   // スプレッドシート上で指定したクラス名を用いてクラスを一括作成する。
 
@@ -53,6 +79,32 @@ function resetCourseCreationSheet() {
   sh.clearContents();
   sh.getRange(1, 1, 1, headers.length).setValues([headers]);
   sh.getRange(1, headers.length + 2).setValue(referenceUrl);
+}
+
+function newCourseListSheet() {
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("一覧・削除");
+
+  if (null !== sh) {
+    return false;
+  }
+
+  const headers = [
+    "name",
+    "section",
+    "descriptionHeading",
+    "description",
+    "room",
+    "ownerId",
+    "courseState",
+  ];
+  const referenceUrl =
+    "https://developers.google.com/classroom/reference/rest/v1/courses#Course.FIELDS-table";
+  const newsh = SpreadsheetApp.getActiveSpreadsheet()
+    .insertSheet()
+    .setName("一覧・削除");
+  newsh.getRange(1, 1, 1, headers.length).setValues([headers]);
+  newsh.getRange(1, headers.length + 2).setValue(referenceUrl);
+  newsh.setFrozenRows(1);
 }
 
 function listCourses() {
@@ -202,6 +254,24 @@ function invokeArchiveOrRemovecourses(action) {
   }
 }
 
+function newInvitationSheet() {
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("招待");
+
+  if (null !== sh) {
+    return false;
+  }
+
+  const headers = ["courseName", "courseId", "userId", "role"];
+  const referenceUrl =
+    "https://developers.google.com/classroom/reference/rest/v1/invitations#Invitation.FIELDS-table";
+  const newsh = SpreadsheetApp.getActiveSpreadsheet()
+    .insertSheet()
+    .setName("招待");
+  newsh.getRange(1, 1, 1, headers.length).setValues([headers]);
+  newsh.getRange(1, headers.length + 2).setValue(referenceUrl);
+  newsh.setFrozenRows(1);
+}
+
 function createInvitations() {
   // セルの内容を2次元配列に格納する。
   // 2次元配列の1次元目の要素数が 1、つまり見出し行しかなかった場合、実行をキャンセルする。
@@ -286,7 +356,9 @@ function newObjectsFrom2DArray(arr) {
 function onOpen(e) {
   const ui = SpreadsheetApp.getUi();
   ui.createMenu("クラスルーム一括処理")
-    .addItem("クラスを一覧表示", "listCourses")
+    .addSubMenu(
+      ui.createMenu("クラスを一覧表示").addItem("実行", "listCourses")
+    )
     .addSubMenu(
       ui
         .createMenu("クラスを一括作成")
