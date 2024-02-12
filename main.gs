@@ -69,8 +69,11 @@ const newInvitationSheet = () => newSheet(invitationSheetInfo);
 function createCourses() {
   // スプレッドシート上で指定したクラス名を用いてクラスを一括作成する。
 
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sh = ss.getSheetByName(creationSheetInfo.name);
+
   // スプレッドシートの内容を2次元配列に格納する。
-  const firstCell = SpreadsheetApp.getActiveSheet().getRange(1, 1);
+  const firstCell = sh.getRange(1, 1);
   const values = firstCell.getDataRegion().getValues();
   if (firstCell.getValue() === "" || values.length === 1) {
     Browser.msgBox(
@@ -99,14 +102,17 @@ function resetCourseCreationSheet() {
   // 選択中のシートの内容を消去し、クラス一括作成用の見出しを作成する。
 
   const res = Browser.msgBox(
-    "現在のシートの内容を消去します。\\n実行しますか？",
+    "[" +
+      creationSheetInfo.name +
+      "] シートの内容を消去します。\\n実行しますか？",
     Browser.Buttons.OK_CANCEL
   );
   if (res === "cancel") {
     return false;
   }
 
-  const sh = SpreadsheetApp.getActiveSheet();
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sh = ss.getSheetByName(creationSheetInfo.name);
   sh.clearContents();
   sh.getRange(1, 1, 1, creationSheetInfo.headers.length).setValues([
     creationSheetInfo.headers,
@@ -125,7 +131,8 @@ function listCourses() {
     listSheetInfo.headers.map((x) => course[x])
   );
 
-  const sh = SpreadsheetApp.getActiveSheet();
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sh = ss.getSheetByName(listSheetInfo.name);
   const currentDataRegion = sh.getRange(1, 1).getDataRegion();
   currentDataRegion.clear();
   sh.getRange(2, 1, sh.getLastRow()).removeCheckboxes();
@@ -173,9 +180,12 @@ function removeCourses() {
 function invokeArchiveOrRemovecourses(action) {
   // 引数として受け取った文字列に応じて、クラスの一括アーカイブ又は一括削除を実行する。
 
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sh = ss.getSheetByName(listSheetInfo.name);
+
   // セルの内容を2次元配列に格納する。
   // 2次元配列の1次元目の要素数が 1、つまり見出し行しかなかった場合、実行をキャンセルする。
-  const firstCell = SpreadsheetApp.getActiveSheet().getRange(1, 1);
+  const firstCell = sh.getRange(1, 1);
   const values = firstCell.getDataRegion().getValues();
   if (firstCell.getValue() === "" || values.length === 1) {
     Browser.msgBox(
@@ -255,9 +265,12 @@ function invokeArchiveOrRemovecourses(action) {
 }
 
 function createInvitations() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sh = ss.getSheetByName(invitationSheetInfo.name);
+
   // セルの内容を2次元配列に格納する。
   // 2次元配列の1次元目の要素数が 1、つまり見出し行しかなかった場合、実行をキャンセルする。
-  const firstCell = SpreadsheetApp.getActiveSheet().getRange(1, 1);
+  const firstCell = sh.getRange(1, 1);
   const values = firstCell.getDataRegion().getValues();
   if (firstCell.getValue() === "" || values.length === 1) {
     Browser.msgBox(
@@ -285,14 +298,17 @@ function resetInvitationSheet() {
   // 選択中のシートの内容を消去し、一括招待用の見出しを作成する。
 
   const res = Browser.msgBox(
-    "現在のシートの内容を消去します。\\n実行しますか？",
+    "[" +
+      invitationSheetInfo.name +
+      "] シートの内容を消去します。\\n実行しますか？",
     Browser.Buttons.OK_CANCEL
   );
   if (res === "cancel") {
     return false;
   }
 
-  const sh = SpreadsheetApp.getActiveSheet();
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sh = ss.getSheetByName(invitationSheetInfo.name);
   sh.getRange(1, 1).getDataRegion().clearContent();
   sh.getRange(1, 1, 1, invitationSheetInfo.headers.length).setValues([
     invitationSheetInfo.headers,
