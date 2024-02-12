@@ -75,6 +75,7 @@ function createCourses() {
   if (null == sh) {
     newCourseCreationSheet();
     Browser.msgBox(
+      "途中で終了しました",
       "[" +
         creationSheetInfo.name +
         "] シートが存在しなかったので作成しました。\\n新しく作成するクラスの情報を入力してから再度実行してください。\\nA列の name のみ必須です。",
@@ -89,6 +90,7 @@ function createCourses() {
 
   if (firstCell.getValue() === "" || values.length === 1) {
     Browser.msgBox(
+      "途中で終了しました",
       "[" +
         creationSheetInfo.name +
         "] シートに必要な情報が入力されていないため、処理を中断しました。\\n新しく作成するクラスの情報を入力してから再度実行してください。\\nA列の name のみ必須です。",
@@ -121,6 +123,7 @@ function resetCourseCreationSheet() {
   if (null == sh) {
     newCourseCreationSheet();
     Browser.msgBox(
+      "終了しました",
       "[" +
         creationSheetInfo.name +
         "] シートが存在しなかったので作成しました。",
@@ -130,6 +133,7 @@ function resetCourseCreationSheet() {
   }
 
   const res = Browser.msgBox(
+    "確認",
     "[" +
       creationSheetInfo.name +
       "] シートの内容を消去します。\\n実行しますか？",
@@ -197,6 +201,7 @@ function listCourses() {
 
 function archiveCourses() {
   const res = Browser.msgBox(
+    "確認",
     "[" +
       listSheetInfo.name +
       "] シートでチェックが入っているクラスを一括アーカイブします。\\n実行しますか？",
@@ -212,6 +217,7 @@ function archiveCourses() {
 
 function removeCourses() {
   const res = Browser.msgBox(
+    "確認",
     "[" +
       listSheetInfo.name +
       "] シートでチェックが入っているクラスを一括削除します。\\n実行しますか？",
@@ -233,6 +239,7 @@ function invokeArchiveOrRemovecourses(action) {
 
   if (null == sh) {
     Browser.msgBox(
+      "途中で終了しました",
       "[" +
         listSheetInfo.name +
         "] シートが存在しなかったので、処理を中断しました。\\nメニューから [クラスを一覧表示] を実行して、削除またはアーカイブするクラスにチェックを入れてから再度実行してください。",
@@ -247,6 +254,7 @@ function invokeArchiveOrRemovecourses(action) {
   const values = firstCell.getDataRegion().getValues();
   if (firstCell.getValue() === "" || values.length === 1) {
     Browser.msgBox(
+      "途中で終了しました",
       "[" +
         listSheetInfo.name +
         "] シートに必要な情報が入力されていないため、処理を中断しました。\\nメニューから [クラスを一覧表示] を実行して、削除またはアーカイブするクラスにチェックを入れてから再度実行してください。",
@@ -260,6 +268,7 @@ function invokeArchiveOrRemovecourses(action) {
 
   if (requests.filter((x) => x.target === true).length === 0) {
     Browser.msgBox(
+      "途中で終了しました",
       "[" +
         listSheetInfo.name +
         "] シートのどのクラスにもチェックが入っていないので、処理を中断しました。\\n削除またはアーカイブするクラスにチェックを入れてから再度実行してください。",
@@ -306,6 +315,7 @@ function invokeArchiveOrRemovecourses(action) {
     .join("\\n");
   if (unmatchedCourseNames) {
     Browser.msgBox(
+      "終了しました",
       "以下のクラスを" +
         actionName +
         "できませんでした。\\nスプレッドシート上のクラス名や ID が実際のものと一致しませんでした。\\nセルの内容が書き換わっている可能性があります。\\nクラスリストを作成しなおしてから再度実行してください。" +
@@ -325,6 +335,7 @@ function invokeArchiveOrRemovecourses(action) {
     .join("\\n");
   if (provisionCourseNames) {
     Browser.msgBox(
+      "終了しました",
       "以下のクラスを" +
         actionName +
         'できませんでした。\\nクラスの状態が "PROVISIONED" です。\\nクラスへの招待を承諾するか辞退してから再度実行してください。' +
@@ -341,6 +352,7 @@ function createInvitations() {
   if (null == sh) {
     newInvitationSheet();
     Browser.msgBox(
+      "途中で終了しました",
       "[" +
         invitationSheetInfo.name +
         "] シートが存在しなかったので作成しました。\\n以下の通りに情報を入力してから再度実行してください。A列以外は全て必須です。\\nA列: クラス名\\nB列: クラス ID\\nC列: ユーザー ID\\nD列: 役割 (STUDENT/TEACHER)",
@@ -355,6 +367,7 @@ function createInvitations() {
   const values = firstCell.getDataRegion().getValues();
   if (firstCell.getValue() === "" || values.length === 1) {
     Browser.msgBox(
+      "途中で終了しました",
       "[" +
         invitationSheetInfo.name +
         "] シートに必要な情報が入力されていないため、処理を中断しました。\\n以下の通りに情報を入力してから再度実行してください。A列以外は全て必須です。\\nA列: クラス名\\nB列: クラス ID\\nC列: ユーザー ID\\nD列: 役割 (STUDENT/TEACHER)",
@@ -386,6 +399,7 @@ function resetInvitationSheet() {
   if (null == sh) {
     newInvitationSheet();
     Browser.msgBox(
+      "終了しました",
       "[" +
         invitationSheetInfo.name +
         "] シートが存在しなかったので作成しました。",
@@ -395,6 +409,7 @@ function resetInvitationSheet() {
   }
 
   const res = Browser.msgBox(
+    "確認",
     "[" +
       invitationSheetInfo.name +
       "] シートの内容を消去します。\\n実行しますか？",
