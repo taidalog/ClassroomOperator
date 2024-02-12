@@ -1,8 +1,8 @@
 # ClassroomOperator
 
-Google Classroomを操作するためのGASのコード.
+Google Classroom を操作するための GAS のコード.
 
-Version 1.0.0
+Version 2.0.0
 
 [English README](README.md)
 

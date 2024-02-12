@@ -1,5 +1,5 @@
 const helpURL =
-  "https://github.com/taidalog/ClassroomOperator/blob/v1.0.0/README.ja.md";
+  "https://github.com/taidalog/ClassroomOperator/blob/v2.0.0/README.ja.md";
 
 const creationSheetInfo = {
   name: "作成",

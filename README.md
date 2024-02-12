@@ -2,13 +2,13 @@
 
 GAS codes for operating Google Classroom.
 
-Version 1.0.0
+Version 2.0.0
 
 [Japanese README](README.ja.md)
 
 ## Features
 
-- 
+-
 
 ## Usage
 
