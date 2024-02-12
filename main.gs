@@ -1,3 +1,6 @@
+const helpURL =
+  "https://github.com/taidalog/ClassroomOperator/blob/v1.0.0/README.ja.md";
+
 const creationSheetInfo = {
   name: "作成",
   headers: [
@@ -58,7 +61,9 @@ function newSheet(sheetInfo) {
     .setValues([sheetInfo.headers]);
   newsh
     .getRange(1, sheetInfo.headers.length + 2)
-    .setValue(sheetInfo.referenceUrl);
+    .setValue(sheetInfo.referenceUrl)
+    .offset(1, 0)
+    .setValue(helpURL);
   newsh.setFrozenRows(1);
 }
 
@@ -147,9 +152,10 @@ function resetCourseCreationSheet() {
   sh.getRange(1, 1, 1, creationSheetInfo.headers.length).setValues([
     creationSheetInfo.headers,
   ]);
-  sh.getRange(1, creationSheetInfo.headers.length + 2).setValue(
-    creationSheetInfo.referenceUrl
-  );
+  sh.getRange(1, creationSheetInfo.headers.length + 2)
+    .setValue(creationSheetInfo.referenceUrl)
+    .offset(1, 0)
+    .setValue(helpURL);
 }
 
 function listCourses() {
@@ -193,10 +199,11 @@ function listCourses() {
   // これは、クラスの一括アーカイブや一括削除に使用するもの。
   sh.getRange(2, 1, courseProperties.length, 1).insertCheckboxes();
 
-  // 公式レファレンスの URL をセルに書いておく。みんな見てね。
-  sh.getRange(1, listSheetInfo.headers.length + 3).setValue(
-    listSheetInfo.referenceUrl
-  );
+  // 公式レファレンスと README の URL をセルに書いておく。みんな見てね。
+  sh.getRange(1, listSheetInfo.headers.length + 3)
+    .setValue(listSheetInfo.referenceUrl)
+    .offset(1, 0)
+    .setValue(helpURL);
 }
 
 function archiveCourses() {
@@ -423,9 +430,10 @@ function resetInvitationSheet() {
   sh.getRange(1, 1, 1, invitationSheetInfo.headers.length).setValues([
     invitationSheetInfo.headers,
   ]);
-  sh.getRange(1, invitationSheetInfo.headers.length + 2).setValue(
-    invitationSheetInfo.referenceUrl
-  );
+  sh.getRange(1, invitationSheetInfo.headers.length + 2)
+    .setValue(invitationSheetInfo.referenceUrl)
+    .offset(1, 0)
+    .setValue(helpURL);
 }
 
 function tryCoursesGet(course_id) {
