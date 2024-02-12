@@ -91,7 +91,7 @@ function createCourses() {
     Browser.msgBox(
       "[" +
         creationSheetInfo.name +
-        "] シートに、新しく作成するクラスの情報を入力してから再度実行してください。\\nA列の name のみ必須です。",
+        "] シートに必要な情報が入力されていないため、処理を中断しました。\\n新しく作成するクラスの情報を入力してから再度実行してください。\\nA列の name のみ必須です。",
       Browser.Buttons.OK
     );
     return false;
@@ -196,13 +196,25 @@ function listCourses() {
 }
 
 function archiveCourses() {
+  const res = Browser.msgBox(
+    "[" +
+      listSheetInfo.name +
+      "] シートでチェックが入っているクラスを一括アーカイブします。\\n実行しますか？",
+    Browser.Buttons.OK_CANCEL
+  );
+  if (res === "cancel") {
+    return false;
+  }
+
   // 以下の関数に `ARCHIVE` という文字列を渡すことで、クラスの一括アーカイブを実行する。
   invokeArchiveOrRemovecourses("ARCHIVE");
 }
 
 function removeCourses() {
   const res = Browser.msgBox(
-    "クラスを一括削除します。\\n実行しますか？",
+    "[" +
+      listSheetInfo.name +
+      "] シートでチェックが入っているクラスを一括削除します。\\n実行しますか？",
     Browser.Buttons.OK_CANCEL
   );
   if (res === "cancel") {
@@ -235,7 +247,9 @@ function invokeArchiveOrRemovecourses(action) {
   const values = firstCell.getDataRegion().getValues();
   if (firstCell.getValue() === "" || values.length === 1) {
     Browser.msgBox(
-      "メニューから [クラスを一覧表示] を実行して、削除またはアーカイブするクラスにチェックを入れてから再度実行してください。",
+      "[" +
+        listSheetInfo.name +
+        "] シートに必要な情報が入力されていないため、処理を中断しました。\\nメニューから [クラスを一覧表示] を実行して、削除またはアーカイブするクラスにチェックを入れてから再度実行してください。",
       Browser.Buttons.OK
     );
     return false;
@@ -248,7 +262,7 @@ function invokeArchiveOrRemovecourses(action) {
     Browser.msgBox(
       "[" +
         listSheetInfo.name +
-        "] シートで、削除またはアーカイブするクラスにチェックを入れてから再度実行してください。",
+        "] シートのどのクラスにもチェックが入っていないので、処理を中断しました。\\n削除またはアーカイブするクラスにチェックを入れてから再度実行してください。",
       Browser.Buttons.OK
     );
     return false;
@@ -343,7 +357,7 @@ function createInvitations() {
     Browser.msgBox(
       "[" +
         invitationSheetInfo.name +
-        "] シートに、以下の通りに情報を入力してから再度実行してください。A列以外は全て必須です。\\nA列: クラス名\\nB列: クラス ID\\nC列: ユーザー ID\\nD列: 役割 (STUDENT/TEACHER)",
+        "] シートに必要な情報が入力されていないため、処理を中断しました。\\n以下の通りに情報を入力してから再度実行してください。A列以外は全て必須です。\\nA列: クラス名\\nB列: クラス ID\\nC列: ユーザー ID\\nD列: 役割 (STUDENT/TEACHER)",
       Browser.Buttons.OK
     );
     return false;
