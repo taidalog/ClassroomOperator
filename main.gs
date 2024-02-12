@@ -497,7 +497,7 @@ function onOpen(e) {
         .addItem("一括削除", "removeCourses")
     )
     .addToUi();
-  newCourseCreationSheet();
   newCourseListSheet();
+  newCourseCreationSheet();
   newInvitationSheet();
 }
