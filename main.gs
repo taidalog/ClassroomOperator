@@ -90,11 +90,11 @@ function newCourseListSheet() {
 
   const headers = [
     "name",
-    "section",
-    "descriptionHeading",
-    "description",
-    "room",
+    "id",
     "ownerId",
+    "enrollmentCode",
+    "creationTime",
+    "updateTime",
     "courseState",
   ];
   const referenceUrl =
