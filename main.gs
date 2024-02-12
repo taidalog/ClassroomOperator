@@ -1,11 +1,6 @@
-function newCourseCreationSheet() {
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("作成");
-
-  if (null !== sh) {
-    return false;
-  }
-
-  const headers = [
+const creationSheetInfo = {
+  name: "作成",
+  headers: [
     "name",
     "section",
     "descriptionHeading",
@@ -13,14 +8,51 @@ function newCourseCreationSheet() {
     "room",
     "ownerId",
     "courseState",
-  ];
-  const referenceUrl =
-    "https://developers.google.com/classroom/reference/rest/v1/courses#Course.FIELDS-table";
+  ],
+  referenceUrl:
+    "https://developers.google.com/classroom/reference/rest/v1/courses#Course.FIELDS-table",
+};
+
+const listSheetInfo = {
+  name: "一覧・削除",
+  headers: [
+    "name",
+    "id",
+    "ownerId",
+    "enrollmentCode",
+    "creationTime",
+    "updateTime",
+    "courseState",
+  ],
+  referenceUrl:
+    "https://developers.google.com/classroom/reference/rest/v1/courses#Course.FIELDS-table",
+};
+
+const invitationSheetInfo = {
+  name: "招待",
+  headers: ["courseName", "courseId", "userId", "role"],
+  referenceUrl:
+    "https://developers.google.com/classroom/reference/rest/v1/invitations#Invitation.FIELDS-table",
+};
+
+function newCourseCreationSheet() {
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(
+    creationSheetInfo.name
+  );
+
+  if (null !== sh) {
+    return false;
+  }
+
   const newsh = SpreadsheetApp.getActiveSpreadsheet()
     .insertSheet()
-    .setName("作成");
-  newsh.getRange(1, 1, 1, headers.length).setValues([headers]);
-  newsh.getRange(1, headers.length + 2).setValue(referenceUrl);
+    .setName(creationSheetInfo.name);
+  newsh
+    .getRange(1, 1, 1, creationSheetInfo.headers.length)
+    .setValues([creationSheetInfo.headers]);
+  newsh
+    .getRange(1, creationSheetInfo.headers.length + 2)
+    .setValue(creationSheetInfo.referenceUrl);
   newsh.setFrozenRows(1);
 }
 
@@ -64,67 +96,44 @@ function resetCourseCreationSheet() {
     return false;
   }
 
-  const headers = [
-    "name",
-    "section",
-    "descriptionHeading",
-    "description",
-    "room",
-    "ownerId",
-    "courseState",
-  ];
-  const referenceUrl =
-    "https://developers.google.com/classroom/reference/rest/v1/courses#Course.FIELDS-table";
   const sh = SpreadsheetApp.getActiveSheet();
   sh.clearContents();
-  sh.getRange(1, 1, 1, headers.length).setValues([headers]);
-  sh.getRange(1, headers.length + 2).setValue(referenceUrl);
+  sh.getRange(1, 1, 1, creationSheetInfo.headers.length).setValues([
+    creationSheetInfo.headers,
+  ]);
+  sh.getRange(1, creationSheetInfo.headers.length + 2).setValue(
+    creationSheetInfo.referenceUrl
+  );
 }
 
 function newCourseListSheet() {
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("一覧・削除");
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(
+    listSheetInfo.name
+  );
 
   if (null !== sh) {
     return false;
   }
 
-  const headers = [
-    "name",
-    "id",
-    "ownerId",
-    "enrollmentCode",
-    "creationTime",
-    "updateTime",
-    "courseState",
-  ];
-  const referenceUrl =
-    "https://developers.google.com/classroom/reference/rest/v1/courses#Course.FIELDS-table";
   const newsh = SpreadsheetApp.getActiveSpreadsheet()
     .insertSheet()
-    .setName("一覧・削除");
-  newsh.getRange(1, 1, 1, headers.length).setValues([headers]);
-  newsh.getRange(1, headers.length + 2).setValue(referenceUrl);
+    .setName(listSheetInfo.name);
+  newsh
+    .getRange(1, 1, 1, listSheetInfo.headers.length)
+    .setValues([listSheetInfo.headers]);
+  newsh
+    .getRange(1, listSheetInfo.headers.length + 2)
+    .setValue(listSheetInfo.referenceUrl);
   newsh.setFrozenRows(1);
 }
 
 function listCourses() {
   // 自分が所属しているクラスの一覧をスプレッドシート上に出力する。
 
-  // 自分が所属しているクラスのプロパティのうち、スプレッドシート上に出力するものの名前。
-  const properties = [
-    "name",
-    "id",
-    "ownerId",
-    "enrollmentCode",
-    "creationTime",
-    "updateTime",
-    "courseState",
-  ];
-
-  // クラスを取得し、変数 properties で指定したプロパティのみを抽出する。
+  // クラスを取得し、listSheetInfo.headers で指定したプロパティのみを抽出する。
   const myCourses = Classroom.Courses.list();
   const courseProperties = myCourses.courses.map((course) =>
-    properties.map((property) => course[property])
+    listSheetInfo.headers.map((x) => course[x])
   );
 
   const sh = SpreadsheetApp.getActiveSheet();
@@ -133,7 +142,9 @@ function listCourses() {
   sh.getRange(2, 1, sh.getLastRow()).removeCheckboxes();
 
   sh.getRange(1, 1).setValue("target");
-  sh.getRange(1, 2, 1, properties.length).setValues([properties]);
+  sh.getRange(1, 2, 1, listSheetInfo.headers.length).setValues([
+    listSheetInfo.headers,
+  ]);
 
   sh.getRange(
     2,
@@ -147,9 +158,9 @@ function listCourses() {
   sh.getRange(2, 1, courseProperties.length, 1).insertCheckboxes();
 
   // 公式レファレンスの URL をセルに書いておく。みんな見てね。
-  const referenceUrl =
-    "https://developers.google.com/classroom/reference/rest/v1/courses#Course.FIELDS-table";
-  sh.getRange(1, properties.length + 3).setValue(referenceUrl);
+  sh.getRange(1, listSheetInfo.headers.length + 3).setValue(
+    listSheetInfo.referenceUrl
+  );
 }
 
 function archiveCourses() {
@@ -255,20 +266,23 @@ function invokeArchiveOrRemovecourses(action) {
 }
 
 function newInvitationSheet() {
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("招待");
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(
+    invitationSheetInfo.name
+  );
 
   if (null !== sh) {
     return false;
   }
 
-  const headers = ["courseName", "courseId", "userId", "role"];
-  const referenceUrl =
-    "https://developers.google.com/classroom/reference/rest/v1/invitations#Invitation.FIELDS-table";
   const newsh = SpreadsheetApp.getActiveSpreadsheet()
     .insertSheet()
-    .setName("招待");
-  newsh.getRange(1, 1, 1, headers.length).setValues([headers]);
-  newsh.getRange(1, headers.length + 2).setValue(referenceUrl);
+    .setName(invitationSheetInfo.name);
+  newsh
+    .getRange(1, 1, 1, invitationSheetInfo.headers.length)
+    .setValues([invitationSheetInfo.headers]);
+  newsh
+    .getRange(1, invitationSheetInfo.headers.length + 2)
+    .setValue(invitationSheetInfo.referenceUrl);
   newsh.setFrozenRows(1);
 }
 
@@ -310,13 +324,14 @@ function resetInvitationSheet() {
     return false;
   }
 
-  const headers = ["courseName", "courseId", "userId", "role"];
-  const referenceUrl =
-    "https://developers.google.com/classroom/reference/rest/v1/invitations#Invitation.FIELDS-table";
   const sh = SpreadsheetApp.getActiveSheet();
   sh.getRange(1, 1).getDataRegion().clearContent();
-  sh.getRange(1, 1, 1, headers.length).setValues([headers]);
-  sh.getRange(1, headers.length + 2).setValue(referenceUrl);
+  sh.getRange(1, 1, 1, invitationSheetInfo.headers.length).setValues([
+    invitationSheetInfo.headers,
+  ]);
+  sh.getRange(1, invitationSheetInfo.headers.length + 2).setValue(
+    invitationSheetInfo.referenceUrl
+  );
 }
 
 function tryCoursesGet(course_id) {
